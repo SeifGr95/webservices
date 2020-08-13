@@ -96,8 +96,7 @@ exports.updateQuestion = async (req, res) => {
 };
 
 exports.deleteQuestion = async (req, res) => {
-  const id = req.params.userid;
-  let result = await questionModel.findByIdAndRemove(id);
+  let result = await questionModel.findByIdAndRemove(req.params.id);
 
   res.json({
     result: result,

@@ -1,8 +1,9 @@
-const mongoose = require('mongoose') ; 
+const mongoose = require("mongoose");
+const ArticleSchema = new mongoose.Schema({
+  title: { type: String },
+  type: { type: String, $in: ["animal", "vegitale"] },
+  description: { type: String },
+  contenu: { type: String },
+});
 
-const ArticleSchema = mongoose.Schema({
-
-
-}); 
-
-module.exports = mongoose.model('Article',ArticleSchema); 
+module.exports = mongoose.model("Article", ArticleSchema);
