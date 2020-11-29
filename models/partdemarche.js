@@ -14,8 +14,8 @@ const mongoose = require("mongoose");
 
 const PartdemarcheSchema = mongoose.Schema({
   prix: { type: String },
-  unité: { type: String, $in: ["kg", "pièce"] },
-    product: {type:mongoose.Schema.Types.ObjectId,ref:'product'} //kifha produit part de marché()
-});
+  unite: { type: String, $in: ["kg", "piece"] },
+  product: {type:mongoose.Schema.Types.ObjectId,ref:'Product'} 
+})
 
 module.exports = mongoose.model("partdemarche", PartdemarcheSchema);

@@ -4,7 +4,8 @@ const UserSchema = new mongoose.Schema({
     'firstname' : String, 
     'email':String, 
     'password':String,
-    "role":Number 
+    "type":String, 
+    "favoris":[{type:mongoose.Schema.Types.ObjectId,ref:'Event'}] 
 
 }); 
 

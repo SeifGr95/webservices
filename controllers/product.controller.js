@@ -1,17 +1,17 @@
 const productModel = require("../models/Product.model");
-
+const typeModel = require("../models/type.model")
 exports.getAll = (req, res) => {
-  productModel
-    .find()
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials.",
-      });
+  productModel.find()
+  .then((data) => {
+    res.send(data);
+  })
+  .catch((err) => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving products.",
     });
+  });
+   
 };
 exports.getOne = (req, res) => {
   const id = req.params.id;
@@ -84,4 +84,30 @@ exports.delete =  (req, res) => {
   });
 
   
+};
+
+
+// product type
+
+
+exports.createType = (req, res) => {
+
+
+  // Create a Tutorial
+  const type = new typeModel({
+    title: req.body.title
+    
+  });
+
+  // Save Tutorial in the database
+  type.save()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the product.",
+      });
+    });
 };

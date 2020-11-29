@@ -1,4 +1,5 @@
 const questionModel = require("../models/Question.model");
+const answerModel = require("../models/Answer.model");
 
 exports.getAll = (req, res) => {
   questionModel
@@ -13,13 +14,28 @@ exports.getAll = (req, res) => {
       });
     });
 };
+exports.getRecent = (req, res) => {
+  var condition = {};
+  if(req.params.l && req.params.l != ""){
+    condition.limit = parseInt(req.params.l);
+  }
+  questionModel.find({},null,condition).sort('-posted_date').exec(function (err, questions) {
+    if (!err) {
+      res.send(questions);
+    } else {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving recent questions.",
+      });
+    }
+  });
+
+};
 exports.filterByType = (req, res) => {
-  console.log("staring by type...");
   var condition = {};
   if (req.params.t && req.params.t != "") {
     condition.type = req.params.t;
   }
-  console.log(condition);
   questionModel
     .find(condition)
     .then((data) => {
@@ -28,7 +44,7 @@ exports.filterByType = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving tutorials.",
+          err.message || "Some error occurred while retrieving questions.",
       });
     });
 };
@@ -57,11 +73,7 @@ exports.createQuestion = (req, res) => {
   }
 
   // Create a Tutorial
-  const question = new questionModel({
-    title: req.body.title,
-    description: req.body.description,
-    type: req.body.type,
-  });
+  const question = new questionModel(req.body);
 
   // Save Tutorial in the database
   question
@@ -96,6 +108,8 @@ exports.updateQuestion = async (req, res) => {
 };
 
 exports.deleteQuestion = async (req, res) => {
+
+  // await answerModel.deleteMany({question : req.params.id})
   let result = await questionModel.findByIdAndRemove(req.params.id);
 
   res.json({

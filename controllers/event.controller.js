@@ -1,4 +1,5 @@
 const eventModel = require("../models/event.model.");
+const FavorisModel = require("../models/Favoris.model");
 
 exports.getAll = (req, res) => {
   eventModel
@@ -14,6 +15,32 @@ exports.getAll = (req, res) => {
     });
 };
 
+exports.favoris = (req , res ) => {
+  
+
+  // Create a Tutorial
+  const favoris = new FavorisModel(req.body);
+
+  // Save Tutorial in the database
+  favoris
+    .save()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the event.",
+      });
+    });
+} 
+
+exports.getuserfavoris= (req, res) => {
+  FavorisModel.find({id_user : req.params.user_id})
+  .then((data) => {
+    res.send(data);
+  })
+}
 exports.getOne = (req, res) => {
   const id = req.params.id;
 
@@ -66,16 +93,18 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
   eventModel
-    .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    .findByIdAndUpdate(id, req.body, { useFindAndModify: false, new:true })
     .then((data) => {
       if (!data) {
         res.status(404).send({
+          status:'failed',
           message: `Cannot update event with id=${id}. Maybe event was not found!`,
         });
-      } else res.send({ message: "event was updated successfully." });
+      } else res.send({status:'success', message: "event was updated successfully.",record:data });
     })
     .catch((err) => {
       res.status(500).send({
+        status:'failed',
         message: "Error updating event with id=" + id,
       });
     });

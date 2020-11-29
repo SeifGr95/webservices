@@ -6,8 +6,12 @@ const router = express.Router();
 
 
 router.get("/",verifToken, questionController.getAll);
-router.get("/filter/:t", verifToken, questionController.filterByType);
+router.get("/recent/:l",verifToken, questionController.getRecent);
+
 router.get("/:id", verifToken, questionController.getQuestion);
+
+router.post("/filter/:t", verifToken, questionController.filterByType);
+
 router.post("/", verifToken, questionController.createQuestion);
 router.put("/:id", verifToken, questionController.updateQuestion);
 router.delete("/:id", verifToken, questionController.deleteQuestion);

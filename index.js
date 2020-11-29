@@ -9,13 +9,25 @@ const articleRouter = require("./routes/article.route"); // les routes (URL) d'u
 const eventRouter = require("./routes/event.route"); // les routes (URL) d'un utlisateurs
 const partdemarcheRouter = require("./routes/partdemarche.route"); // les routes (URL) d'un utlisateurs
 const productRouter = require("./routes/product.route"); // les routes (URL) d'un utlisateurs
-const app = express(); // l'instance d'express
+const contactRouter = require("./routes/contact.route"); // les routes (URL) d'un utlisateurs
+const newsRouter = require("./routes/news.route"); // les routes (URL) d'un utlisateurs
+const expertRouter = require("./routes/Expert.route"); // les routes (URL) d'un utlisateurs
+const commisariatRouter = require("./routes/commisariat.route"); // les routes (URL) d'un utlisateurs
+const rdvRouter = require("./routes/rdv.route"); // les routes (URL) d'un utlisateurs
+const secteurRouter = require("./routes/secteur.route"); // les routes (URL) d'un utlisateurs
+
+const app = express(); // l'instance d'express;
+const cors = require("cors")
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 // parse application/json
-app.use(bodyParser.json());
-
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({
+  limit : '50mb',
+  extended: true
+}));
+app.use(cors())
 mongoose.connect(
   "mongodb+srv://saif:123456saif@cluster0.dxdlw.mongodb.net/usermanagement?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true },
@@ -34,7 +46,13 @@ app.use("/article/", articleRouter);
 app.use("/event/", eventRouter);
 app.use("/partdemarche/", partdemarcheRouter);
 app.use("/product/", productRouter);
+app.use("/contact/", contactRouter);
+app.use("/news/", newsRouter);
+app.use("/expert/", expertRouter); 
+app.use("/commisariat/", commisariatRouter);
+app.use("/rdv/", rdvRouter);
+app.use("/secteur/", secteurRouter);
 // le serveur qui demarre sur le port 3000
 app.listen(3000, () => {
-  console.log("app is running..");
+  console.log("app is running.. on 3000");
 });

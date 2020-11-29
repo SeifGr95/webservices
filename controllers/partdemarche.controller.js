@@ -1,9 +1,10 @@
 const partdemarcheModel = require("../models/partdemarche");
-const partdemarche = require("../models/partdemarche");
+const product = require("../models/Product.model");
 
 exports.getAll = (req, res) => {
   partdemarcheModel
     .find()
+    .populate('product')
     .then((data) => {
       res.send(data);
     })
@@ -42,22 +43,31 @@ exports.create = (req, res) => {
   // Create a Tutorial
   const partdemarche = new partdemarcheModel({
     prix: req.body.prix,
-    unité: req.body.unité,
-    
+    unite: req.body.unite,
+    product: req.body.product
+
   });
 
   // Save Tutorial in the database
-  partdemarche
-    .save(partdemarche)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the event.",
-      });
-    });
+  partdemarcheModel.find({ product: partdemarche.product }).then(data => {
+    if (data.length > 0) {
+      req.params.id = data[0]._id;
+      this.update(req, res);
+    } else {
+      partdemarche
+        .save(partdemarche)
+        .then((data) => {
+          res.send(data);
+        })
+        .catch((err) => {
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the event.",
+          });
+        });
+    }
+  })
+
 };
 exports.update = (req, res) => {
   const id = req.params.id;
@@ -78,11 +88,11 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  partdemarcheModel.findByIdAndRemove(req.params.id).then(r=>{
+  partdemarcheModel.findByIdAndRemove(req.params.id).then(r => {
     res.json({
-        result: "deleted",
-      });
+      result: "deleted",
+    });
   });
 
-  
+
 };

@@ -13,7 +13,20 @@ exports.getAll = (req, res) => {
       });
     });
 };
-
+exports.getByQuestionId = (req, res) => {
+  answerModel
+    .find({question : req.params.questionid})
+    .populate('user')
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving tutorials.",
+      });
+    });
+};
 exports.getOne = (req, res) => {
   const id = req.params.id;
 
@@ -42,7 +55,7 @@ exports.create = (req, res) => {
   const answer = new answerModel({
     answer: req.body.answer,
     question: req.body.question,
-    user: req.user,
+    user: req.body.user,
   });
 
   // Save Tutorial in the database
