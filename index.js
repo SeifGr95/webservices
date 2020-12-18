@@ -53,6 +53,6 @@ app.use("/commisariat/", commisariatRouter);
 app.use("/rdv/", rdvRouter);
 app.use("/secteur/", secteurRouter);
 // le serveur qui demarre sur le port 3000
-app.listen(3000, () => {
+app.listen(process.env.PORT, process.env.IP, () => {
   console.log("app is running.. on 3000");
 });
