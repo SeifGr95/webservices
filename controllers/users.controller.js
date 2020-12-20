@@ -236,7 +236,7 @@ function sendResetEmail(email, token , res) {
      to: email,
      subject: 'Restoration de mdp',
      text: 'cliquez ici',
-     html: 'Welcome! <br> To reset your password <a href="http://localhost:4200/forgot-password/' + token + '"> click here </a>'
+     html: 'Welcome! <br> To reset your password <a href="http://flahtena.alwaysdata.net/forgot-password/' + token + '"> click here </a>'
  };
 
  transporter.sendMail(mailOptions, function (error, info) {
