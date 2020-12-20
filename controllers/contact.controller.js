@@ -10,8 +10,8 @@ exports.create = (req, res) => {
             host : 'smtp.gmail.com',
             port : 587,
             auth : {
-                user : 'etudiant.gorchene.saifeddine@uvt.tn',
-                pass : 'saif123RR.uvt'
+                user : 'agripfe2020@gmail.com',
+                pass : 'pfe123**'
             },
             secureConnection : true,
             tls : {
@@ -21,8 +21,8 @@ exports.create = (req, res) => {
         //2- mail options
     
         var mailOptions = {
-            from : 'saifgorchene@gmail.com',
-            to : 'contact.agri1@gmail.com',
+            from : 'agripfe2020@gmail.com',
+            to : 'saifgorchene@gmail.com',
             subject :req.body.subject ,
             text : req.body.text,
         }
