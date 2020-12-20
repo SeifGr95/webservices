@@ -197,6 +197,84 @@ const initUserFavories = async (req,res)=>{
   })
 }
 
+exports.forgotPassword = (req, res) => {
+  User.findOne({ email: req.params.email }, (err, user) => {
+     if (!user) {
+         return res.status(403).json({ no: "no" })
+     }
+     var r = Math.random().toString(36).substring(1);
+     user.token = r;
+     user.save()
+         .then(data => {
+             sendResetEmail(req.params.email, r , res)
+            // return res.status(200).json({ ok: "ok" })
+         })
+
+ }) 
+}
+function sendResetEmail(email, token , res) {
+ //
+
+
+
+ var transporter = nodemailer.createTransport({
+     host: 'smtp.gmail.com',
+     port: 465,
+     auth: {
+      user : 'agripfe2020@gmail.com',
+      pass : 'pfe123**' 
+     },
+     secure : true
+     
+ });
+ var mailOptions = {
+     from: 'Flahetna',
+     to: email,
+     subject: 'Restoration de mdp',
+     text: 'cliquez ici',
+     html: 'Welcome! <br> To reset your password <a href="http://localhost:4200/' + token + '"> click here </a>'
+ };
+
+ transporter.sendMail(mailOptions, function (error, info) {
+     if (error) {
+         console.log(error);
+         res.send({"error" : error})
+     } else {
+         console.log('Email sent: ' + info.response);
+         res.send({"ok" : info.response})
+
+     }
+ });
+}
+
+exports.getUserByToken = (req, res) => {
+  User.findOne({ token: req.body.token })
+      .then(user => {
+          if (!user) {
+              return res.status(403).json({ type: "notFound" })
+          } else {
+              return res.send(user)
+          }
+      })
+}
+
+exports.resetPassword = (req, res) => {
+  User.findOne({ token: req.body.token, email: req.body.email })
+      .then(async(user) => {
+          if (!user) {
+              return res.status(403).json({ type: "tokenExpired" })
+          } else {
+              user.password = await bcrypt.hash(req.body.password, 10);
+              user.token = null;
+              user.save()
+                  .then(result => {
+                      return res.status(200).json(user)
+                  })
+
+          }
+      })
+}
+
 module.exports.getAllUsers = getAllUsers;
 module.exports.getUserById = getUserById;
 module.exports.upDateNewUser = upDateNewUser;

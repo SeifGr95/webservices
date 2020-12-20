@@ -5,8 +5,8 @@ const UserSchema = new mongoose.Schema({
     'email':String, 
     'password':String,
     "type":String, 
-    "favoris":[{type:mongoose.Schema.Types.ObjectId,ref:'Event'}] 
-
+    "favoris":[{type:mongoose.Schema.Types.ObjectId,ref:'Event'}] ,
+    "token" : String 
 }); 
 
 module.exports = mongoose.model('User',UserSchema);

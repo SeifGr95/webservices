@@ -21,8 +21,8 @@ exports.create = (req, res) => {
         //2- mail options
     
         var mailOptions = {
-            from : 'agripfe2020@gmail.com',
-            to : 'saifgorchene@gmail.com',
+            from : req.body.email,
+            to : 'agripfe2020@gmail.com',
             subject :req.body.subject ,
             text : req.body.text,
         }

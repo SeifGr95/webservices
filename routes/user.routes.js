@@ -21,5 +21,11 @@ router.get("/getnotif/:id",verifToken,notifController.getNotifByUserId);
 router.get("/getnotifAgri/:id",verifToken,notifController.getNotifByAgriId); 
 
 
+router.get('/forgotpwd/:email', UserController.forgotPassword)
+router.post('/usertoken', UserController.getUserByToken)
+router.post('/resetpwd', UserController.resetPassword)
+
+
 
 module.exports = router;
+
