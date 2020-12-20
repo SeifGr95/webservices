@@ -1,6 +1,7 @@
 const UserModel = require("../models/User.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const getAllUsers = async (req, res) => {
   let newList = await UserModel.find().populate("favoris");
   res.json({
@@ -23,6 +24,7 @@ const addNewUser = async (req, res) => {
   const pass = req.body.password;
   const type = req.body.type;
 
+
   const cryptPs = await bcrypt.hash(pass, 10);
   let user = await UserModel.findOne({ email: email });
   if (user) {
@@ -38,6 +40,8 @@ const addNewUser = async (req, res) => {
       type: type,
     });
     let result = await newUSer.save();
+    sendRegisterEmail(email)
+
     res.json({
       result: result,
     });
@@ -198,7 +202,7 @@ const initUserFavories = async (req,res)=>{
 }
 
 exports.forgotPassword = (req, res) => {
-  User.findOne({ email: req.params.email }, (err, user) => {
+  UserModel.findOne({ email: req.params.email }, (err, user) => {
      if (!user) {
          return res.status(403).json({ no: "no" })
      }
@@ -232,7 +236,7 @@ function sendResetEmail(email, token , res) {
      to: email,
      subject: 'Restoration de mdp',
      text: 'cliquez ici',
-     html: 'Welcome! <br> To reset your password <a href="http://localhost:4200/' + token + '"> click here </a>'
+     html: 'Welcome! <br> To reset your password <a href="http://localhost:4200/forgot-password/' + token + '"> click here </a>'
  };
 
  transporter.sendMail(mailOptions, function (error, info) {
@@ -247,8 +251,41 @@ function sendResetEmail(email, token , res) {
  });
 }
 
+
+function sendRegisterEmail(email) {
+   
+  var transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      auth: {
+       user : 'agripfe2020@gmail.com',
+       pass : 'pfe123**' 
+      },
+      secure : true
+      
+  });
+  var mailOptions = {
+      from: 'Flahetna',
+      to: email,
+      subject: 'Bienvenue à Flahetna',
+      text: 'Vous ête parmis nous',
+      html: 'Welcome! <br>'
+  };
+ 
+  transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+          console.log(error);
+         
+      } else {
+        
+ 
+      }
+  });
+ }
+ 
+
 exports.getUserByToken = (req, res) => {
-  User.findOne({ token: req.body.token })
+  UserModel.findOne({ token: req.body.token })
       .then(user => {
           if (!user) {
               return res.status(403).json({ type: "notFound" })
@@ -259,7 +296,7 @@ exports.getUserByToken = (req, res) => {
 }
 
 exports.resetPassword = (req, res) => {
-  User.findOne({ token: req.body.token, email: req.body.email })
+  UserModel.findOne({ token: req.body.token, email: req.body.email })
       .then(async(user) => {
           if (!user) {
               return res.status(403).json({ type: "tokenExpired" })
